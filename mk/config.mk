@@ -6,16 +6,6 @@ ifneq ($(SKIP_AUTO_CONF),yes)
 sinclude $(TOPDIR)/autoconf.mk
 endif
 
-boot0_toolchain_check=$(strip $(shell if [ -x $(CROSS_COMPILE)gcc ];  then  echo yes;  fi))
-ifneq ("$(boot0_toolchain_check)", "yes")
-#different architectures
-ifeq (x$(CPU), xriscv64)
-	CROSS_COMPILE := $(TOPDIR)/../tools/toolchain/riscv64-linux-x86_64-20200528/bin/riscv64-unknown-linux-gnu-
-else
-	CROSS_COMPILE := $(TOPDIR)/../tools/toolchain/gcc-linaro-7.2.1-2017.11-x86_64_arm-linux-gnueabi/bin/arm-linux-gnueabi-
-endif
-endif
-
 AS		= $(CROSS_COMPILE)as
 LD		= $(CROSS_COMPILE)ld
 CC		= $(CROSS_COMPILE)gcc
