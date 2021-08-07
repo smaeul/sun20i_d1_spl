@@ -1,24 +1,13 @@
+You can use any riscv64 ELF/GNU/musl toolchain.
 
-1.build nand
-make p=sun50iw3p1 m=nand
-make boot0
+1.build mmc
+make CROSS_COMPILE=riscv64-linux-musl- p=sun20iw1p1 mmc
 
-2.build mmc
-make p=sun50iw3p1 m=mmc
-make boot0
+2.build nand
+make CROSS_COMPILE=riscv64-linux-musl- p=sun20iw1p1 nand
 
 3.build spinor
-make p=sun50iw3p1 m=spinor
-make boot0
+make CROSS_COMPILE=riscv64-linux-musl- p=sun20iw1p1 spinor
 
-3.build fes
-make p=sun50iw3p1 m=fes
-make fes
-
-4.build sboot
-make p=sun50iw3p1 m=sboot
-make sboot
-
-5.show degbug message
-make boot0|sboot|fes  V=1
-
+4.build fes
+make CROSS_COMPILE=riscv64-linux-musl- p=sun20iw1p1 fes
