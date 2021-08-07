@@ -17,11 +17,11 @@ _start:
 
 	/*enable theadisaee*/
 	li t1, EN_THEADISAEE
-	csrs mxstatus, t1
+	csrs 0x7c0, t1 /* mxstatus */
 
 	/*invaild ICACHE/DCACHE/BTB/BHT*/
 	li t2, 0x30013
-	csrs mcor, t2
+	csrs 0x7c2, t2 /* mcor */
 
 	li sp, CONFIG_NBOOT_STACK
 	jal clear_bss

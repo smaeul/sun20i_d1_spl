@@ -95,7 +95,7 @@ void invalidate_dcache_range(unsigned long start, unsigned long end)
 	register unsigned long i asm("a0") = start & ~(L1_CACHE_BYTES - 1);
 
 	for (; i < end; i += L1_CACHE_BYTES)
-		asm volatile ("dcache.ipa a0");
+		asm volatile (".long 0x02a5000b");	/* dcache.ipa a0 */
 
 	asm volatile (".long 0x01b0000b");
 	/* flush_dcache_all(); */

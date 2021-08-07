@@ -1,5 +1,6 @@
 // * SPDX-License-Identifier:	GPL-2.0+
 # SPDX-License-Identifier:     GPL-2.0+
+#include "t-head-compat.inc"
 	.file	"mctl_hal.c"
 	.option nopic
 	.text

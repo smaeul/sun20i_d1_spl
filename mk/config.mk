@@ -19,10 +19,10 @@ OBJDUMP		= $(CROSS_COMPILE)objdump
 
 ##########################################################
 ifeq (x$(CPU), xriscv64)
-MARCH := rv64gcvxthead
+MARCH := rv64gc
 MABI := lp64
 
-COMPILEINC :=  -isystem $(shell dirname `$(CC)  -print-libgcc-file-name`)/../../include
+COMPILEINC :=  -isystem $(shell dirname `$(CC)  -print-libgcc-file-name`)/include
 SPLINCLUDE    := \
 		-I$(SRCTREE)/include \
 		-I$(SRCTREE)/include/arch/riscv/ \
