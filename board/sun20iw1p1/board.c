@@ -25,13 +25,6 @@
 int sunxi_board_init(void)
 {
 	sunxi_board_pll_init();
-	axp_init(0);
-	/*
-	 * When waking up, don't change the voltage, frequency,
-	 * cpu is easy to hang. We restore it in atf.
-	 */
-		set_pll_voltage(CONFIG_SUNXI_CORE_VOL);
-		set_sys_voltage(CONFIG_SUNXI_SYS_VOL);
 	printf("board init ok\n");
 	return 0;
 }
