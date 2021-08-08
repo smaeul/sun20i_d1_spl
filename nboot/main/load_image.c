@@ -49,7 +49,7 @@ int load_image(phys_addr_t *uboot_base, phys_addr_t *optee_base, \
 	printf("*******************TOC1 Head Message*************************\n");
 	printf("Toc_name          = %s\n",   toc1_head->name);
 	printf("Toc_magic         = 0x%x\n", toc1_head->magic);
-	printf("Toc_add_sum	      = 0x%x\n", toc1_head->add_sum);
+	printf("Toc_add_sum       = 0x%x\n", toc1_head->add_sum);
 
 	printf("Toc_serial_num    = 0x%x\n", toc1_head->serial_num);
 	printf("Toc_status        = 0x%x\n", toc1_head->status);
@@ -57,26 +57,27 @@ int load_image(phys_addr_t *uboot_base, phys_addr_t *optee_base, \
 	printf("Toc_items_nr      = 0x%x\n", toc1_head->items_nr);
 	printf("Toc_valid_len     = 0x%x\n", toc1_head->valid_len);
 	printf("TOC_MAIN_END      = 0x%x\n", toc1_head->end);
-	printf("***************************************************************\n\n");
+	printf("*************************************************************\n");
 #endif
 	//init
 	toc1_item = item_head;
 	for(i=0;i<toc1_head->items_nr;i++,toc1_item++)
 	{
 #ifdef BOOT_DEBUG
-		printf("\n*******************TOC1 Item Message*************************\n");
+		printf("*******************TOC1 Item Message*************************\n");
 		printf("Entry_name        = %s\n",   toc1_item->name);
 		printf("Entry_data_offset = 0x%x\n", toc1_item->data_offset);
 		printf("Entry_data_len    = 0x%x\n", toc1_item->data_len);
 
-		printf("encrypt	          = 0x%x\n", toc1_item->encrypt);
+		printf("encrypt           = 0x%x\n", toc1_item->encrypt);
 		printf("Entry_type        = 0x%x\n", toc1_item->type);
 		printf("run_addr          = 0x%x\n", toc1_item->run_addr);
 		printf("index             = 0x%x\n", toc1_item->index);
 		printf("Entry_end         = 0x%x\n", toc1_item->end);
-		printf("***************************************************************\n\n");
-#endif
+		printf("*************************************************************\n");
+#else
 		printf("Entry_name        = %s\n",   toc1_item->name);
+#endif
 
 		image_base = toc1_item->run_addr;
 		if (strncmp(toc1_item->name, ITEM_UBOOT_NAME, sizeof(ITEM_UBOOT_NAME)) == 0) {
