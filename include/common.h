@@ -67,7 +67,7 @@ int sunxi_board_exit(void);
 void boot0_jmp_monitor(phys_addr_t addr);
 void boot0_jmp_optee(phys_addr_t optee, phys_addr_t uboot);
 void boot0_jmp(phys_addr_t addr);
-void boot0_jmp_opensbi(phys_addr_t opensbi, phys_addr_t uboot);
+void boot0_jmp_opensbi(phys_addr_t opensbi, phys_addr_t dtb, phys_addr_t uboot);
 
 int axp_init(u8 power_mode);
 int axp_reg_write(u8 addr, u8 val);
@@ -119,7 +119,7 @@ void  free(void *p);
 int load_package(void);
 int load_image(phys_addr_t *uboot_base, phys_addr_t *optee_base, \
 				phys_addr_t *monitor_base, phys_addr_t *rtos_base, \
-				phys_addr_t *opensbi_base);
+				phys_addr_t *opensbi_base, phys_addr_t *dtb_base);
 void update_flash_para(phys_addr_t uboot_base);
 int verify_addsum(void *mem_base, u32 size);
 u32 g_mod( u32 dividend, u32 divisor, u32 *quot_p);

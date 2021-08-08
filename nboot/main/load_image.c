@@ -29,7 +29,7 @@ int toc1_flash_read(u32 start_sector, u32 blkcnt, void *buff)
 }
 
 int load_image(phys_addr_t *uboot_base, phys_addr_t *optee_base, \
-		phys_addr_t *monitor_base, phys_addr_t *rtos_base, phys_addr_t *opensbi_base)
+		phys_addr_t *monitor_base, phys_addr_t *rtos_base, phys_addr_t *opensbi_base, phys_addr_t *dtb_base)
 {
 	int i;
 	//int len;
@@ -90,6 +90,8 @@ int load_image(phys_addr_t *uboot_base, phys_addr_t *optee_base, \
 			*opensbi_base = image_base;
 		} else if (strncmp(toc1_item->name, ITEM_RTOS_NAME, sizeof(ITEM_RTOS_NAME)) == 0) {
 			*rtos_base = image_base;
+		} else if (strncmp(toc1_item->name, ITEM_DTB_NAME, sizeof(ITEM_DTB_NAME)) == 0) {
+			*dtb_base = image_base;
 		}
 		toc1_flash_read(toc1_item->data_offset/512, (toc1_item->data_len+511)/512, (void *)image_base);
 	}

@@ -24,7 +24,7 @@ void main(void)
 	int dram_size;
 	int status;
 	phys_addr_t  uboot_base = 0, optee_base = 0, monitor_base = 0, \
-				rtos_base = 0, opensbi_base = 0;
+				rtos_base = 0, opensbi_base = 0, dtb_base = 0;
 
 	sunxi_serial_init(BT0_head.prvt_head.uart_port, (void *)BT0_head.prvt_head.uart_ctrl, 6);
 	printf("HELLO! BOOT0 is starting!\n");
@@ -81,7 +81,7 @@ void main(void)
 
 	status = load_package();
 	if(status == 0 )
-		load_image(&uboot_base, &optee_base, &monitor_base, &rtos_base, &opensbi_base);
+		load_image(&uboot_base, &optee_base, &monitor_base, &rtos_base, &opensbi_base, &dtb_base);
 	else
 		goto _BOOT_ERROR;
 
@@ -89,7 +89,7 @@ void main(void)
 
 	printf("Jump to second Boot.\n");
 	if (opensbi_base) {
-			boot0_jmp_opensbi(opensbi_base, uboot_base);
+			boot0_jmp_opensbi(opensbi_base, dtb_base, uboot_base);
 	} else if (monitor_base) {
 		struct spare_monitor_head *monitor_head =
 			(struct spare_monitor_head *)((phys_addr_t)monitor_base);

@@ -43,7 +43,7 @@ __LOOP:
 #endif
 }
 
-void boot0_jmp_opensbi(phys_addr_t opensbi_base, phys_addr_t uboot_base)
+void boot0_jmp_opensbi(phys_addr_t opensbi_base, phys_addr_t dtb, phys_addr_t uboot_base)
 {
 __LOOP:
 	asm volatile("WFI");
