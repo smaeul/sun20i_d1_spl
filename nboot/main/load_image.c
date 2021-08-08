@@ -18,20 +18,6 @@
 #include <lzma/LzmaTools.h>
 #include <u-boot/lz4.h>
 
-typedef struct _sunxi_image_head
-{
-	unsigned int  jump_instruction;
-	unsigned char magic[MAGIC_SIZE];
-	unsigned int  res1;
-	unsigned int  res2;
-	unsigned int  res3;
-	unsigned int  res4;
-	unsigned char res5[8];
-	unsigned char res6[8];
-	int           run_addr;
-}sunxi_image_head;
-
-
 extern const boot0_file_head_t  BT0_head;
 
 int toc1_flash_read(u32 start_sector, u32 blkcnt, void *buff)
@@ -40,13 +26,6 @@ int toc1_flash_read(u32 start_sector, u32 blkcnt, void *buff)
 	memcpy(buff, (addr), 512 * blkcnt);
 
 	return blkcnt;
-}
-
-phys_addr_t toc1_get_image_addr(u32 start_sector)
-{
-	sunxi_image_head *image_head = (sunxi_image_head *)(sunxi_get_iobase(CONFIG_BOOTPKG_BASE + 512 * start_sector));
-
-	return image_head->run_addr;
 }
 
 int load_image(phys_addr_t *uboot_base, phys_addr_t *optee_base, \
@@ -99,7 +78,7 @@ int load_image(phys_addr_t *uboot_base, phys_addr_t *optee_base, \
 #endif
 		printf("Entry_name        = %s\n",   toc1_item->name);
 
-		image_base = toc1_get_image_addr(toc1_item->data_offset/512);
+		image_base = toc1_item->run_addr;
 		if(strncmp(toc1_item->name, ITEM_UBOOT_NAME, sizeof(ITEM_UBOOT_NAME)) == 0) {
 			*uboot_base = image_base;
 			toc1_flash_read(toc1_item->data_offset/512, (toc1_item->data_len+511)/512, (void *)image_base);
@@ -157,17 +136,13 @@ int load_image(phys_addr_t *uboot_base, phys_addr_t *optee_base, \
 #endif
 		}
 		else if(strncmp(toc1_item->name, ITEM_DTB_NAME, sizeof(ITEM_DTB_NAME)) == 0) {
-			/* note , uboot must be less than 2M*/
-			image_base = *uboot_base + 2*1024*1024;
 			struct private_atf_head *atf_head = (struct private_atf_head *)(sunxi_get_iobase(*monitor_base));
 			atf_head->dtb_base = image_base;
 			toc1_flash_read(toc1_item->data_offset/512, (toc1_item->data_len+511)/512, (void *)image_base);
 		} else if (strncmp(toc1_item->name, ITEM_DTBO_NAME, sizeof(ITEM_DTBO_NAME)) == 0) {
-			image_base = *uboot_base + 1*1024*1024;
 			toc1_flash_read(toc1_item->data_offset/512, (toc1_item->data_len+511)/512, (void *)image_base);
 		} else if (strncmp(toc1_item->name, ITEM_LOGO_NAME,
 				   sizeof(ITEM_LOGO_NAME)) == 0) {
-			image_base	    = *uboot_base + 3 * 1024 * 1024;
 			*(uint *)(image_base) = toc1_item->data_len;
 			toc1_flash_read(toc1_item->data_offset / 512,
 					(toc1_item->data_len + 511) / 512,
@@ -181,14 +156,11 @@ int load_image(phys_addr_t *uboot_base, phys_addr_t *optee_base, \
 			*rtos_base = image_base;
 			toc1_flash_read(toc1_item->data_offset/512, (toc1_item->data_len+511)/512, (void *)image_base);
 		} else if (strncmp(toc1_item->name, ITEM_MELIS_CONFIG_NAME, sizeof(ITEM_MELIS_CONFIG_NAME)) == 0) {
-			image_base = 0x43000000; /* hardcode here, as we can't get image_base from gz header */
-			printf("image_base:%x\n", image_base);
 			memcpy((void *)image_base, &toc1_item->data_len, sizeof(toc1_item->data_len));
 			toc1_flash_read(toc1_item->data_offset/512, (toc1_item->data_len+511)/512, (void *)image_base + 512);
 		}
 #ifdef CFG_SUNXI_GUNZIP
 		else if ((strncmp(toc1_item->name, ITEM_MELIS_GZ_NAME, sizeof(ITEM_MELIS_GZ_NAME)) == 0)) {
-			image_base = 0x40000000; /* hardcode here, as we can't get image_base from gz header */
 			*rtos_base = image_base;
 			void *dst = (void *)image_base;
 			int dstlen = *(unsigned long *)((unsigned char *)CONFIG_BOOTPKG_BASE + toc1_item->data_offset + toc1_item->data_len - 4);
@@ -204,7 +176,6 @@ int load_image(phys_addr_t *uboot_base, phys_addr_t *optee_base, \
 #endif
 #ifdef CFG_SUNXI_LZ4
 		else if ((strncmp(toc1_item->name, ITEM_MELIS_LZ4_NAME, sizeof(ITEM_MELIS_LZ4_NAME)) == 0)) {
-			image_base = 0x40000000; /* hardcode here, as we can't get image_base from lz4 header */
 			*rtos_base = image_base;
 			void *dst = (void *)image_base;
 			unsigned int dstlen = 0x800000;
@@ -220,7 +191,6 @@ int load_image(phys_addr_t *uboot_base, phys_addr_t *optee_base, \
 #endif
 #ifdef CFG_SUNXI_LZMA
 		else if (strncmp(toc1_item->name, ITEM_MELIS_LZMA_NAME, sizeof(ITEM_MELIS_LZMA_NAME)) == 0) {
-			image_base = 0x40000000; /* hardcode here, as we can't get image_base from gz header */
 			*rtos_base = image_base;
 			size_t src_len = ~0U, dst_len = ~0U;
 			void *dst = (void *)image_base;
