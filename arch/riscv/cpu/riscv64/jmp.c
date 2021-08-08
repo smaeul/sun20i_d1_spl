@@ -1,6 +1,7 @@
 // * SPDX-License-Identifier:	GPL-2.0+
 
 #include <common.h>
+#include <sbi/fw_dynamic.h>
 
 void boot0_jmp(phys_addr_t addr)
 {
@@ -27,12 +28,17 @@ __LOOP:
 #endif
 }
 
+static struct fw_dynamic_info fw_info;
+
 void boot0_jmp_opensbi(phys_addr_t opensbi_base, phys_addr_t dtb, phys_addr_t uboot_base)
 {
-	asm volatile("jr a0");
-__LOOP:
-	asm volatile("WFI");
-	goto __LOOP;
+	void (*fn)(ulong, phys_addr_t, phys_addr_t) = (void *)opensbi_base;
+
+	fw_info.magic		= FW_DYNAMIC_INFO_MAGIC_VALUE;
+	fw_info.version		= FW_DYNAMIC_INFO_VERSION_2;
+	fw_info.next_addr	= uboot_base;
+	fw_info.next_mode	= FW_DYNAMIC_INFO_NEXT_MODE_S;
+	fw_info.options		= 0;
+
+	fn(0, dtb, (phys_addr_t)&fw_info);
 }
-
-
