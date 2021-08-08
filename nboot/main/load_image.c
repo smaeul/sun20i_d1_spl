@@ -79,131 +79,18 @@ int load_image(phys_addr_t *uboot_base, phys_addr_t *optee_base, \
 		printf("Entry_name        = %s\n",   toc1_item->name);
 
 		image_base = toc1_item->run_addr;
-		if(strncmp(toc1_item->name, ITEM_UBOOT_NAME, sizeof(ITEM_UBOOT_NAME)) == 0) {
+		if (strncmp(toc1_item->name, ITEM_UBOOT_NAME, sizeof(ITEM_UBOOT_NAME)) == 0) {
 			*uboot_base = image_base;
-			toc1_flash_read(toc1_item->data_offset/512, (toc1_item->data_len+511)/512, (void *)image_base);
-		}
-		else if (strncmp(toc1_item->name, ITEM_OPTEE_NAME, sizeof(ITEM_OPTEE_NAME)) == 0) {
+		} else if (strncmp(toc1_item->name, ITEM_OPTEE_NAME, sizeof(ITEM_OPTEE_NAME)) == 0) {
 			*optee_base = image_base;
-			toc1_flash_read(toc1_item->data_offset/512, (toc1_item->data_len+511)/512, (void *)image_base);
-			struct spare_optee_head *tee_head = (struct spare_optee_head *)image_base;
-			memcpy(tee_head->dram_para, BT0_head.prvt_head.dram_para, 32*sizeof(int));
-			memcpy(tee_head->chipinfo, &BT0_head.prvt_head.jtag_gpio[4], 8);
-		}
-		else if(strncmp(toc1_item->name, ITEM_MONITOR_NAME, sizeof(ITEM_MONITOR_NAME)) == 0) {
+		} else if (strncmp(toc1_item->name, ITEM_MONITOR_NAME, sizeof(ITEM_MONITOR_NAME)) == 0) {
 			*monitor_base = image_base;
-			toc1_flash_read(toc1_item->data_offset/512, (toc1_item->data_len+511)/512, (void *)image_base);
-			struct private_atf_head *atf_head = (struct private_atf_head *)image_base;
-			memcpy(atf_head->dram_para, BT0_head.prvt_head.dram_para, 32 * sizeof(int));
-			memcpy(atf_head->platform, &BT0_head.prvt_head.jtag_gpio[4], 8);
-		}
-		else if(strncmp(toc1_item->name, ITEM_SCP_NAME, sizeof(ITEM_SCP_NAME)) == 0) {
-#ifdef SCP_SRAM_BASE
-#ifdef SCP_DTS_BASE
-			struct sbrom_toc1_item_info  *toc1_item_scp_dts = item_head;
-			int scp_j;
-			for (scp_j = 0; scp_j < toc1_head->items_nr; scp_j++, toc1_item_scp_dts++) {
-				if (strncmp(toc1_item_scp_dts->name, ITEM_DTB_NAME, sizeof(ITEM_DTB_NAME)) == 0) {
-					if (toc1_item_scp_dts->data_len > SCP_DTS_SIZE) {
-						printf("error: dtb size larger than scp dts size\n");
-					} else {
-						toc1_flash_read(toc1_item_scp_dts->data_offset/512, (toc1_item_scp_dts->data_len+511)/512, (void *)SCP_DTS_BASE);
-					}
-					break;
-				}
-			}
-			if (scp_j == toc1_head->items_nr)
-				printf("error: dtb not found for scp\n");
-#endif
-#ifdef SCP_DEASSERT_BY_MONITOR
-			toc1_flash_read(toc1_item->data_offset / 512,
-					(SCP_SRAM_SIZE + SCP_DRAM_SIZE + 511) / 512,
-					(void *)SCP_TEMP_STORE_BASE);
-#else
-			toc1_flash_read(toc1_item->data_offset / 512,
-					(SCP_SRAM_SIZE + 511) / 512,
-					(void *)SCP_SRAM_BASE);
-			toc1_flash_read((toc1_item->data_offset +
-					 SCP_CODE_DRAM_OFFSET) /
-						512,
-					(SCP_DRAM_SIZE + 511) / 512,
-					(void *)SCP_DRAM_BASE);
-			memcpy((void *)(SCP_SRAM_BASE + HEADER_OFFSET +
-					SCP_DRAM_PARA_OFFSET),
-			       dram_para_addr, SCP_DARM_PARA_NUM * sizeof(int));
-			sunxi_deassert_arisc();
-#endif
-#endif
-		}
-		else if(strncmp(toc1_item->name, ITEM_DTB_NAME, sizeof(ITEM_DTB_NAME)) == 0) {
-			struct private_atf_head *atf_head = (struct private_atf_head *)(sunxi_get_iobase(*monitor_base));
-			atf_head->dtb_base = image_base;
-			toc1_flash_read(toc1_item->data_offset/512, (toc1_item->data_len+511)/512, (void *)image_base);
-		} else if (strncmp(toc1_item->name, ITEM_DTBO_NAME, sizeof(ITEM_DTBO_NAME)) == 0) {
-			toc1_flash_read(toc1_item->data_offset/512, (toc1_item->data_len+511)/512, (void *)image_base);
-		} else if (strncmp(toc1_item->name, ITEM_LOGO_NAME,
-				   sizeof(ITEM_LOGO_NAME)) == 0) {
-			*(uint *)(image_base) = toc1_item->data_len;
-			toc1_flash_read(toc1_item->data_offset / 512,
-					(toc1_item->data_len + 511) / 512,
-					(void *)(image_base + 16));
-			set_uboot_func_mask(UBOOT_FUNC_MASK_BIT_BOOTLOGO);
 		} else if (strncmp(toc1_item->name, ITEM_OPENSBI_NAME, sizeof(ITEM_OPENSBI_NAME)) == 0) {
 			*opensbi_base = image_base;
-			toc1_flash_read(toc1_item->data_offset/512, (toc1_item->data_len+511)/512, (void *)image_base);
-		} else if (strncmp(toc1_item->name, ITEM_RTOS_NAME, sizeof(ITEM_RTOS_NAME)) == 0 ||
-			strncmp(toc1_item->name, ITEM_MELIS_NAME, sizeof(ITEM_MELIS_NAME)) == 0) {
+		} else if (strncmp(toc1_item->name, ITEM_RTOS_NAME, sizeof(ITEM_RTOS_NAME)) == 0) {
 			*rtos_base = image_base;
-			toc1_flash_read(toc1_item->data_offset/512, (toc1_item->data_len+511)/512, (void *)image_base);
-		} else if (strncmp(toc1_item->name, ITEM_MELIS_CONFIG_NAME, sizeof(ITEM_MELIS_CONFIG_NAME)) == 0) {
-			memcpy((void *)image_base, &toc1_item->data_len, sizeof(toc1_item->data_len));
-			toc1_flash_read(toc1_item->data_offset/512, (toc1_item->data_len+511)/512, (void *)image_base + 512);
 		}
-#ifdef CFG_SUNXI_GUNZIP
-		else if ((strncmp(toc1_item->name, ITEM_MELIS_GZ_NAME, sizeof(ITEM_MELIS_GZ_NAME)) == 0)) {
-			*rtos_base = image_base;
-			void *dst = (void *)image_base;
-			int dstlen = *(unsigned long *)((unsigned char *)CONFIG_BOOTPKG_BASE + toc1_item->data_offset + toc1_item->data_len - 4);
-			unsigned char *src = (unsigned char *)(CONFIG_BOOTPKG_BASE) + toc1_item->data_offset;
-			unsigned long srclen = toc1_item->data_len;
-			unsigned long *lenp = &srclen;
-			int ret = gunzip(dst, dstlen, src, lenp);
-			if (ret) {
-				printf("Error: gunzip returned %d\n", ret);
-				return -1;
-			}
-		}
-#endif
-#ifdef CFG_SUNXI_LZ4
-		else if ((strncmp(toc1_item->name, ITEM_MELIS_LZ4_NAME, sizeof(ITEM_MELIS_LZ4_NAME)) == 0)) {
-			*rtos_base = image_base;
-			void *dst = (void *)image_base;
-			unsigned int dstlen = 0x800000;
-			unsigned char *src = (unsigned char *)(CONFIG_BOOTPKG_BASE) + toc1_item->data_offset;
-			unsigned long srclen = toc1_item->data_len;
-			int ret = ulz4fn(src, srclen, dst, (size_t *)&dstlen);
-			if (ret) {
-				printf("Error: ulz4fn returned %d\n", ret);
-				return -1;
-			}
-
-		}
-#endif
-#ifdef CFG_SUNXI_LZMA
-		else if (strncmp(toc1_item->name, ITEM_MELIS_LZMA_NAME, sizeof(ITEM_MELIS_LZMA_NAME)) == 0) {
-			*rtos_base = image_base;
-			size_t src_len = ~0U, dst_len = ~0U;
-			void *dst = (void *)image_base;
-			unsigned char *src = (unsigned char *)(CONFIG_BOOTPKG_BASE) + toc1_item->data_offset;
-			int ret = lzmaBuffToBuffDecompress(dst, &src_len, src, dst_len);
-			if (ret) {
-				printf("Error: lzmaBuffToBuffDecompress returned %d\n", ret);
-				return -1;
-			}
-
-		}
-#endif
-
+		toc1_flash_read(toc1_item->data_offset/512, (toc1_item->data_len+511)/512, (void *)image_base);
 	}
 
 	return 0;

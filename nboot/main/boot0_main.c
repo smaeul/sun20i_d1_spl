@@ -17,9 +17,6 @@
 #include <arch/efuse.h>
 #endif
 
-static void update_uboot_info(phys_addr_t uboot_base, phys_addr_t optee_base,
-		phys_addr_t monitor_base, phys_addr_t rtos_base, u32 dram_size,
-		u16 pmu_type, u16 uart_input, u16 key_input);
 static int boot0_clear_env(void);
 
 void main(void)
@@ -28,7 +25,6 @@ void main(void)
 	int status;
 	phys_addr_t  uboot_base = 0, optee_base = 0, monitor_base = 0, \
 				rtos_base = 0, opensbi_base = 0;
-	u16 pmu_type = 0, key_input = 0; /* TODO: set real value */
 
 	sunxi_serial_init(BT0_head.prvt_head.uart_port, (void *)BT0_head.prvt_head.uart_ctrl, 6);
 	printf("HELLO! BOOT0 is starting!\n");
@@ -89,8 +85,6 @@ void main(void)
 	else
 		goto _BOOT_ERROR;
 
-	update_uboot_info(uboot_base, optee_base, monitor_base, rtos_base, dram_size,
-			pmu_type, uart_input_value, key_input);
 	mmu_disable( );
 
 	printf("Jump to second Boot.\n");
@@ -116,35 +110,6 @@ _BOOT_ERROR:
 	boot0_clear_env();
 	boot0_jmp(FEL_BASE);
 
-}
-
-static void update_uboot_info(phys_addr_t uboot_base, phys_addr_t optee_base,
-		phys_addr_t monitor_base, phys_addr_t rtos_base, u32 dram_size,
-		u16 pmu_type, u16 uart_input, u16 key_input)
-{
-	if (rtos_base)
-		return;
-
-	uboot_head_t  *header = (uboot_head_t *) uboot_base;
-	struct sbrom_toc1_head_info *toc1_head = (struct sbrom_toc1_head_info *)CONFIG_BOOTPKG_BASE;
-
-	header->boot_data.boot_package_size = toc1_head->valid_len;
-	header->boot_data.dram_scan_size = dram_size;
-	memcpy((void *)header->boot_data.dram_para, &BT0_head.prvt_head.dram_para, 32 * sizeof(int));
-
-	if(monitor_base)
-		header->boot_data.monitor_exist = 1;
-	if(optee_base)
-		header->boot_data.secureos_exist = 1;
-#ifndef CONFIG_RISCV
-	header->boot_data.func_mask |= get_uboot_func_mask(UBOOT_FUNC_MASK_ALL);
-#endif
-	update_flash_para(uboot_base);
-
-	header->boot_data.pmu_type = pmu_type;
-	header->boot_data.uart_input = uart_input;
-	header->boot_data.key_input = key_input;
-	header->boot_data.debug_mode = sunxi_get_printf_debug_mode();
 }
 
 static int boot0_clear_env(void)
