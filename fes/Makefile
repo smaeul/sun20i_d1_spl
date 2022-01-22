@@ -54,7 +54,7 @@ fes: $(LIBS) fes1.lds
 	$(LD) -r -o lib$(PLATFORM)_fes.o $(LIBS)
 	$(LD) lib$(PLATFORM)_fes.o $(OBJS) $(PLATFORM_LIBGCC) $(LDFLAGS) -Tfes1.lds -o fes1.elf -Map fes1.map
 	$(OBJCOPY) $(OBJCFLAGS) -O binary fes1.elf fes1.bin
-	$(TOPDIR)/mk/gen_check_sum fes1.bin fes1_$(PLATFORM)$(DRAM_TYPE_NAME).bin
+	python3 $(TOPDIR)/mk/gen_check_sum fes1.bin fes1_$(PLATFORM)$(DRAM_TYPE_NAME).bin
 	$(STRIP) -g $(TOPDIR)/fes/lib$(PLATFORM)_fes.o
 
 $(LIBS): depend

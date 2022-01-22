@@ -76,7 +76,7 @@ define build_boot0_with_suffix
 	$(LD) -r -o lib$(PLATFORM)$1.o $(LIBS)
 	$(LD) lib$(PLATFORM)$1.o $(OBJS) $(PLATFORM_LIBGCC) $(LDFLAGS) $(LDFLAGS_GC) -Tboot0.lds -o boot0$1.elf -Map boot0$1.map
 	$(OBJCOPY) $(OBJCFLAGS) -O binary  boot0$1.elf boot0$1.bin
-	$(TOPDIR)/mk/gen_check_sum $(SRCTREE)/nboot/boot0$1.bin boot0$1_$(PLATFORM)$(DRAM_TYPE_NAME).bin
+	python3 $(TOPDIR)/mk/gen_check_sum $(SRCTREE)/nboot/boot0$1.bin boot0$1_$(PLATFORM)$(DRAM_TYPE_NAME).bin
 	$(STRIP) -g $(TOPDIR)/nboot/lib$(PLATFORM)$1.o
 endef
 
