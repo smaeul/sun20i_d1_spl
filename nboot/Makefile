@@ -45,6 +45,7 @@ LIBS-y += arch/$(ARCH)/cpu/$(CPU)/libarch.o
 LIBS-y += nboot/main/libmain.o
 LIBS-y += drivers/libdrivers.o
 LIBS-y += common/libcommon.o
+LIBS-y += libfdt/libfdt.o
 LIBS-y += board/$(PLATFORM)/libboard.o
 LIBS-$(CFG_SUNXI_SET_SECURE_MODE) += drivers/secure/libsecure.o
 

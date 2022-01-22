@@ -53,3 +53,19 @@ void * memcpy( void *dst0, const void* src0, size_t len0)
 
 	return dst0;
 }
+
+void *memmove(void *dest, const void *src, size_t count)
+{
+	char *tmp, *s;
+
+	if (dest <= src) {
+		memcpy(dest, src, count);
+	} else {
+		tmp = (char *)dest + count;
+		s   = (char *)src + count;
+		while (count--)
+			*--tmp = *--s;
+	}
+
+	return dest;
+}

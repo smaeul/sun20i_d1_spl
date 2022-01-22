@@ -83,7 +83,7 @@ SPLINCLUDE    := \
  COMM_FLAGS += -mno-unaligned-access
 endif
 
-
+SPLINCLUDE += -I$(SRCTREE)/libfdt
 
 C_FLAGS += $(SPLINCLUDE)   $(COMM_FLAGS)
 S_FLAGS += $(SPLINCLUDE)   -D__ASSEMBLY__  $(COMM_FLAGS)
