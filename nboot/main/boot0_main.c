@@ -5,6 +5,7 @@
  */
 
 #include <common.h>
+#include <libfdt.h>
 #include <private_boot0.h>
 #include <private_uboot.h>
 #include <private_toc.h>
@@ -84,6 +85,36 @@ void main(void)
 		load_image(&uboot_base, &optee_base, &monitor_base, &rtos_base, &opensbi_base, &dtb_base);
 	else
 		goto _BOOT_ERROR;
+
+	if (dtb_base) {
+		void *fdt = (void *)dtb_base;
+		unsigned int i = 0;
+		uint32_t reg[4];
+		int offs;
+
+		printf("Adding DRAM info to DTB.\n");
+		status = fdt_open_into(fdt, fdt, SZ_1M);
+		if (status)
+			goto _BOOT_ERROR;
+
+		offs = fdt_subnode_offset(fdt, 0, "memory");
+		if (offs < 0)
+			offs = fdt_add_subnode(fdt, 0, "memory");
+		if (offs < 0)
+			goto _BOOT_ERROR;
+		if (fdt_address_cells(fdt, 0) > 1)
+			reg[i++] = 0;
+		reg[i++] = cpu_to_fdt32(SDRAM_OFFSET(0));
+		if (fdt_size_cells(fdt, 0) > 1)
+			reg[i++] = 0;
+		reg[i++] = cpu_to_fdt32(dram_size * SZ_1M);
+		if (fdt_setprop_string(fdt, offs, "device_type", "memory") < 0)
+			goto _BOOT_ERROR;
+		if (fdt_setprop(fdt, offs, "reg", reg, i * sizeof(*reg)) < 0)
+			goto _BOOT_ERROR;
+		if (fdt_pack(fdt) < 0)
+			goto _BOOT_ERROR;
+	}
 
 	mmu_disable( );
 
