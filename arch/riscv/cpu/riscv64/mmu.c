@@ -43,7 +43,11 @@ __weak void dcache_enable(void)
 	(21) MAEE为1时MMU的pte中扩展地址属性位，用户可以配置页面的地址属性
 	(22) THEADISAEE为1时可以使用C906扩展指令集
 	*/
+#ifdef CFG_USE_MAEE
 	csr_set(CSR_MXSTATUS, 0x638000);
+#else
+	csr_set(CSR_MXSTATUS, 0x438000);
+#endif
 
 
 	/*
