@@ -1,10 +1,14 @@
 // SPDX-License-Identifier: GPL-2.0+
 
-#include "sdram.h"
-#include "boot0.h"
+#include <common.h>
 
-#define readl read32
-#define writel write32
+#include "sdram.h"
+
+#undef readl
+#undef writel
+
+#define readl(x)	rv_readl((const volatile void __iomem *)(intptr_t)(x))
+#define writel(x, v)	rv_writel(v, (volatile void __iomem *)(intptr_t)(x))
 
 int set_ddr_voltage(int val)
 {
@@ -1286,20 +1290,20 @@ int dramc_simple_wr_test(uint mem_mb, int len)
 
 	addr = SDRAM_BASE;
 	for (i = 0; i != len; i++, addr++) {
-		writel((uint)(addr),        patt1 + i);
-		writel((uint)(addr + offs), patt2 + i);
+		writel(addr,        patt1 + i);
+		writel(addr + offs, patt2 + i);
 	}
 
 	addr = SDRAM_BASE;
 	for (i = 0; i != len; i++) {
-		v1 = readl((uint)(addr+i));
+		v1 = readl(addr+i);
 		v2 = patt1 + i;
 		if (v1 != v2) {
 			printf("DRAM simple test FAIL.\n");
 			printf("%x != %x at address %x\n", v1, v2, addr+i);
 			return 1;
 		}
-		v1 = readl((uint)(addr+offs+i));
+		v1 = readl(addr+offs+i);
 		v2 = patt2 + i;
 		if (v1 != v2) {
 			printf("DRAM simple test FAIL.\n");
@@ -1651,7 +1655,7 @@ signed int init_DRAM(int type, __dram_para_t *para) // s0
 
 	// Purpose ??
 	if ( para->dram_tpr13 & (1 << 30) ) {
-		rc = readl((uint)(&para->dram_tpr8));
+		rc = readl(&para->dram_tpr8);
 		if ( rc==0 ) {
 			rc = 0x10000200;
 		}
