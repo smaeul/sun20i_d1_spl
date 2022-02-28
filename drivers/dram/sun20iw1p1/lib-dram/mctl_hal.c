@@ -1743,9 +1743,3 @@ unsigned int mctl_init(void)
 	ret_val = init_DRAM(0, &dram_para);
 	return ret_val;
 }
-
-void
-sdram_init(void)
-{
-	init_DRAM(0, &nezha_dram);
-}
