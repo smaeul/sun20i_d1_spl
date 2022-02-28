@@ -448,7 +448,7 @@ void auto_set_timing_para(dram_para_t *para) // s5
 	switch (type) {
 
 	case 2:	// DDR2
-	L59:	{
+		{
 		trasmax = freq / 30;
 		if (freq < 409) {
 			tcl        = 3;
@@ -482,7 +482,7 @@ void auto_set_timing_para(dram_para_t *para) // s5
 	}
 
 	case 3:	// DDR3
-	L57:	{
+		{
 		trasmax = freq / 30;
 		if (freq <= 800) {
 			mr0        = 0x1c70;
@@ -531,7 +531,7 @@ void auto_set_timing_para(dram_para_t *para) // s5
 		}
 
 	case 6:	// LPDDR2
-	L61:	{
+		{
 		trasmax	   = freq / 60;
 		mr3	   = dmr3;
 		twtp       =  twr + 5;
@@ -595,7 +595,6 @@ void auto_set_timing_para(dram_para_t *para) // s5
 	}
 
 	default:
-	L84:
 		twr2rd		= 8;	// 48(sp)
 		tcksrx		= 4;	// t1
 		tckesr		= 3;	// t4
@@ -620,7 +619,6 @@ void auto_set_timing_para(dram_para_t *para) // s5
 		tdinit0		= 0;	// 16(sp)
 		break;
 	}
-L60:
 	if (trtp < tcl - trp + 2) {
 		trtp = tcl - trp + 2;
 	}
