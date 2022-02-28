@@ -667,12 +667,14 @@ L60:
 //
 void ccm_get_sscg()
 {
+	// NOTE: function is present in the assembly, but was not translated.
 }
 
 // Not used ?
 //
 void ccm_set_pll_sscg()
 {
+	// NOTE: function is present in the assembly, but was not translated.
 }
 
 // Purpose of this routine seems to be to initialize the PLL driving
