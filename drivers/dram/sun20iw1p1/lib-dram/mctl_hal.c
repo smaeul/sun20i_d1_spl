@@ -1361,7 +1361,7 @@ int mctl_core_init(dram_para_t *para)
 //
 int auto_scan_dram_size(dram_para_t *para) // s7
 {
-	unsigned int	rval, i, j, rank, maxrank, pgsize, offs, mc_work_mode;
+	unsigned int	rval, i, j, rank, maxrank, offs, mc_work_mode;
 	unsigned int	chk, ptr, shft, banks;
 
 	if (mctl_core_init(para) == 0) {
