@@ -1,41 +1,5 @@
 // SPDX-License-Identifier: GPL-2.0+
 
-typedef struct __DRAM_PARA
-{
-    //normal configuration
-    unsigned int  dram_clk;	// 0x00
-    unsigned int  dram_type;	// 0x04
-    unsigned int  dram_zq;	// 0x08
-    unsigned int  dram_odt_en;	// 0x0c
-
-    //control configuration
-    unsigned int  dram_para1;	// 0x10
-    unsigned int  dram_para2;	// 0x14
-
-    //timing configuration
-    unsigned int  dram_mr0;	// 0x18
-    unsigned int  dram_mr1;	// 0x1c
-    unsigned int  dram_mr2;	// 0x20
-    unsigned int  dram_mr3;	// 0x24
-    unsigned int  dram_tpr0;	// 0x28 DRAMTMG0
-    unsigned int  dram_tpr1;	// 0x2c DRAMTMG1
-    unsigned int  dram_tpr2;	// 0x30 DRAMTMG2
-    unsigned int  dram_tpr3;	// 0x34 DRAMTMG3
-    unsigned int  dram_tpr4;	// 0x38 DRAMTMG4
-    unsigned int  dram_tpr5;	// 0x3c DRAMTMG5
-    unsigned int  dram_tpr6;	// 0x40 DRAMTMG8
-
-    //reserved for future use
-    unsigned int  dram_tpr7;	// 0x44
-    unsigned int  dram_tpr8;	// 0x48
-    unsigned int  dram_tpr9;	// 0x4c
-    unsigned int  dram_tpr10;	// 0x50
-    unsigned int  dram_tpr11;	// 0x54
-    unsigned int  dram_tpr12;	// 0x58
-    unsigned int  dram_tpr13;	// 0x5c
-
-} __dram_para_t;
-
 /*
  * dram_para1 bits:
  *  16-19 = page size
