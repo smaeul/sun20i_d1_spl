@@ -471,6 +471,7 @@ void auto_set_timing_para(__dram_para_t *para) // s5
 		tdinit3    =   1*freq + 1;
 		tmrw       =  0;
 		twr2rd     = twtr + 5;
+		tcwl       =  0;
 		mr1        = dmr1;
 		break;
 	}
@@ -531,6 +532,7 @@ void auto_set_timing_para(__dram_para_t *para) // s5
 		twtp       =  twr + 5;
 		mr2	   =  6;
 		mr1	   =  5;
+		tcksrx     =  5;
 		tckesr	   =  5;
 		trd2wr	   = 10;
 		tcke	   =  2;
@@ -539,6 +541,7 @@ void auto_set_timing_para(__dram_para_t *para) // s5
 		tmrw	   =  3;
 		tcl        =  4;
 		wr_latency =  1;
+		t_rdata_en =  1;
 		tdinit0    = 200*freq + 1;
 		tdinit1    = 100*freq / 1000 + 1;
 		tdinit2    =  11*freq + 1;
@@ -578,6 +581,7 @@ void auto_set_timing_para(__dram_para_t *para) // s5
 		tdinit1 = 500*freq / 1000 + 1;
 		tdinit2 =  11*freq + 1;
 		tdinit3 =   1*freq + 1;
+		tmrd	= 5;
 		tmrw    = 5;
 		twr2rd  = tcwl + twtr + 5;
 		mr1	= 195;
