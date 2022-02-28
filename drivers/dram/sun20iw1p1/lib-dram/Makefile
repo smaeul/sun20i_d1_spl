@@ -15,7 +15,7 @@ COBJS += mctl_hal.o
 
 
 COBJS	:= $(COBJS)
-SRCS	:= $(COBJS:.o=.S)
+SRCS	:= $(COBJS:.o=.c)
 OBJS	:= $(addprefix $(obj),$(COBJS))
 
 #LIBASM  = mctl_hal.S
