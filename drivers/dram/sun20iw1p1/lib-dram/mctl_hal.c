@@ -6,9 +6,9 @@
 #define readl read32
 #define writel write32
 
-void set_ddr_voltage(unsigned val)
+int set_ddr_voltage(int val)
 {
-	return;
+	return val;
 }
 
 void handler_super_standby(void)
