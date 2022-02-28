@@ -1582,7 +1582,7 @@ signed int init_DRAM(int type, dram_para_t *para) // s0
 
 	// Test ZQ status
 	if (para->dram_tpr13 & (1 << 16)) {
-		printf("\nDRAM only have internal ZQ!!\n");
+		printf("DRAM only have internal ZQ!!\n");
 		writel(0x3000160, readl(0x3000160) |  0x100);
 		writel(0x3000168, 0);
 		sdelay(10);
