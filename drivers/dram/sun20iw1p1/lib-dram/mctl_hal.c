@@ -172,7 +172,7 @@ void eye_delay_compensation(__dram_para_t *para) // s1
 
 // Not used ??
 //
-void bit_delay_compensation()
+void bit_delay_compensation(void)
 {
 	const unsigned int data0[44] = {
 		0, 1, 2, 3, 2, 3, 3, 3, 0, 0, 0,
@@ -665,14 +665,14 @@ L60:
 
 // Not used ?
 //
-void ccm_get_sscg()
+void ccm_get_sscg(void)
 {
 	// NOTE: function is present in the assembly, but was not translated.
 }
 
 // Not used ?
 //
-void ccm_set_pll_sscg()
+void ccm_set_pll_sscg(void)
 {
 	// NOTE: function is present in the assembly, but was not translated.
 }
