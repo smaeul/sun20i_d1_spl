@@ -199,7 +199,8 @@ void bit_delay_compensation(void)
 	for(i = 0, datxiocr = start; datxiocr != end; i += 11, datxiocr += 0x20) {
 		for(j = 0, k = i; j != 11; j++, k++) {
 			rval  = readl((unsigned int)datxiocr[j]);
-			rval += data1[k] << 8 + data0[k];
+			rval += data1[k] << 8;
+			rval += data0[k];
 			writel((unsigned int)datxiocr[j], rval);
 		}
 	}
