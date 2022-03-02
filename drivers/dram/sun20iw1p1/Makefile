@@ -10,7 +10,7 @@ include $(TOPDIR)/mk/config.mk
 
 all:
 ifeq ($(notdir $(shell find ./ -name lib-dram)), lib-dram)
-	make -C lib-dram
+	$(MAKE) -C lib-dram
 else
 	@echo "libdram exist"
 endif
