@@ -22,7 +22,6 @@ ifeq (x$(CPU), xriscv64)
 MARCH := rv64gc
 MABI := lp64
 
-COMPILEINC :=  -isystem $(shell dirname `$(CC)  -print-libgcc-file-name`)/include
 SPLINCLUDE    := \
 		-I$(SRCTREE)/include \
 		-I$(SRCTREE)/include/arch/riscv/ \
@@ -30,7 +29,7 @@ SPLINCLUDE    := \
 		-I$(SRCTREE)/include/arch/$(PLATFORM)/ \
 		-I$(SRCTREE)/include/openssl/
 
- COMM_FLAGS := -nostdinc  $(COMPILEINC) \
+ COMM_FLAGS := \
 	-g  -Os   -fno-common \
 	-ffunction-sections \
 	-fno-builtin -ffreestanding \
@@ -54,7 +53,6 @@ else
 FLOAT_FLAGS := -msoft-float
 endif
 
-COMPILEINC :=  -isystem $(shell dirname `$(CC)  -print-libgcc-file-name`)/include
 SPLINCLUDE    := \
 		-I$(SRCTREE)/include \
 		-I$(SRCTREE)/include/arch/arm/ \
@@ -62,7 +60,7 @@ SPLINCLUDE    := \
 		-I$(SRCTREE)/include/arch/$(PLATFORM)/ \
 		-I$(SRCTREE)/include/openssl/
 
- COMM_FLAGS := -nostdinc  $(COMPILEINC) \
+ COMM_FLAGS := \
 	-g  -Os   -fno-common -mfpu=neon  $(FLOAT_FLAGS) \
 	-ffunction-sections \
 	-fno-builtin -ffreestanding \
