@@ -30,7 +30,7 @@ SPLINCLUDE    := \
 		-I$(SRCTREE)/include/arch/$(PLATFORM)/ \
 		-I$(SRCTREE)/include/openssl/
 
- COMM_FLAGS := -nostdinc  $(COMPILEINC) \
+ COMM_FLAGS :=  $(COMPILEINC) \
 	-g  -Os   -fno-common \
 	-ffunction-sections \
 	-fno-builtin -ffreestanding \
