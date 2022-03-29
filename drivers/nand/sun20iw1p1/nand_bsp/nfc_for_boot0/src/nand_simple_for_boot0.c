@@ -103,7 +103,7 @@ void _cal_addr_in_chip(__u32 block, __u32 page, __u32 sector, __u8 *addr,
 		addr[2] = (row >> 16) & 0xff;
 		break;
 	case 4:
-		addr[0] = column && 0xff;
+		addr[0] = column & 0xff;
 		addr[1] = (column >> 8) & 0xff;
 		addr[2] = row & 0xff;
 		addr[3] = (row >> 8) & 0xff;
