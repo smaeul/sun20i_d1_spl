@@ -228,7 +228,7 @@ __u32 Nand_Is_lsb_page(__u32 page)
 		return 0;
 	}
 
-	if ((NAND_LSBPAGE_TYPE == 0x01)) {
+	if (NAND_LSBPAGE_TYPE == 0x01) {
 		/*hynix 26nm,20nm*/
 		if ((page == 0) || (page == 1))
 			return 1;
@@ -240,7 +240,7 @@ __u32 Nand_Is_lsb_page(__u32 page)
 		return 0;
 	}
 
-	if ((NAND_LSBPAGE_TYPE == 0x02)) {
+	if (NAND_LSBPAGE_TYPE == 0x02) {
 		/*hynix 16nm*/
 		if (page == 0)
 			return 1;
