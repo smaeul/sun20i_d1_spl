@@ -93,7 +93,7 @@ export LDFLAGS_GC
 ###########################################################
 
 ###########################################################
-PLATFORM_LIBGCC = -L $(shell dirname `$(CC) $(CFLAGS) -print-libgcc-file-name`) -lgcc
+PLATFORM_LIBGCC = -L $(shell dirname `$(CC) $(CFLAGS) -print-libgcc-file-name`) -l:$(shell basename `$(CC) $(CFLAGS) -print-libgcc-file-name`)
 export PLATFORM_LIBGCC
 ###########################################################
 
