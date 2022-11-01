@@ -1,3 +1,7 @@
+NOTE: This project is obsolete now that U-Boot SPL is working.
+
+https://github.com/smaeul/u-boot/releases/tag/d1-2022-10-31
+
 You can use any riscv64 ELF/GNU/musl toolchain.
 
 1.build mmc
